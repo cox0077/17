@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>17 Messenger</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background: #080909;
+    color: white;
+}
+
+body {
+    overflow: hidden;
+}
+
+
+.app {
+    width: 100%;
+    height: 100vh;
+
+    display: flex;
+
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            #202525,
+            #080909 50%
+        );
+}
+
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar {
+
+    width: 320px;
+    min-width: 320px;
+
+    height: 100%;
+
+    border-right:
+        1px solid #292e2e;
+
+    background:
+        rgba(13,15,15,.96);
+
+    display: flex;
+    flex-direction: column;
+
+}
+
+
+.logo {
+
+    height: 85px;
+
+    display: flex;
+    align-items: center;
+
+    padding-left: 25px;
+
+    border-bottom:
+        1px solid #292e2e;
+
+}
+
+
+.logo-number {
+
+    font-size: 50px;
+
+    font-weight: 900;
+
+    letter-spacing: -7px;
+
+}
+
+
+.logo-text {
+
+    margin-left: 15px;
+
+    color: #777;
+
+    font-size: 11px;
+
+    letter-spacing: 4px;
+
+}
+
+
+/* =========================
+   USER
+========================= */
+
+.user-box {
+
+    padding: 18px;
+
+    border-bottom:
+        1px solid #202424;
+
+}
+
+
+.username {
+
+    width: 100%;
+
+    padding: 11px;
+
+    border-radius: 9px;
+
+    border:
+        1px solid #292e2e;
+
+    background: #101313;
+
+    color: white;
+
+    outline: none;
+
+}
+
+
+.connect {
+
+    width: 100%;
+
+    margin-top: 8px;
+
+    padding: 11px;
+
+    border: 0;
+
+    border-radius: 9px;
+
+    background: white;
+
+    color: black;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+}
+
+
+/* =========================
+   ONLINE
+========================= */
+
+.online-title {
+
+    padding:
+        18px 18px 8px;
+
+    color: #666;
+
+    font-size: 10px;
+
+    letter-spacing: 2px;
+
+}
+
+
+.users {
+
+    flex: 1;
+
+    overflow-y: auto;
+
+}
+
+
+.user {
+
+    padding:
+        11px 18px;
+
+    color: #aaa;
+
+    font-size: 13px;
+
+}
+
+
+.user::before {
+
+    content: "●";
+
+    color: #62e879;
+
+    margin-right: 8px;
+
+}
+
+
+/* =========================
+   CHAT
+========================= */
+
+.chat {
+
+    flex: 1;
+
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+
+/* HEADER */
+
+.chat-header {
+
+    height: 85px;
+
+    border-bottom:
+        1px solid #292e2e;
+
+    display: flex;
+
+    align-items: center;
+
+    padding: 0 25px;
+
+}
+
+
+.chat-avatar {
+
+    width: 45px;
+    height: 45px;
+
+    border-radius: 50%;
+
+    background: white;
+
+    color: black;
+
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+
+    font-weight: bold;
+
+}
+
+
+.chat-title {
+
+    margin-left: 12px;
+
+}
+
+
+.chat-name {
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+}
+
+
+.chat-status {
+
+    margin-top: 5px;
+
+    font-size: 11px;
+
+    color: #62e879;
+
+}
+
+
+/* =========================
+   MESSAGES
+========================= */
+
+.messages {
+
+    flex: 1;
+
+    overflow-y: auto;
+
+    padding:
+        25px 7%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 8px;
+
+}
+
+
+.message {
+
+    max-width: 65%;
+
+    align-self: flex-start;
+
+    background: #202525;
+
+    border-radius: 15px;
+
+    border-bottom-left-radius: 5px;
+
+    padding:
+        9px 13px;
+
+    font-size: 14px;
+
+    line-height: 1.4;
+
+}
+
+
+.message.mine {
+
+    align-self: flex-end;
+
+    background: white;
+
+    color: black;
+
+    border-bottom-left-radius: 15px;
+
+    border-bottom-right-radius: 5px;
+
+}
+
+
+.message-user {
+
+    color: #75ff85;
+
+    font-size: 10px;
+
+    font-weight: bold;
+
+    margin-bottom: 3px;
+
+}
+
+
+.message.mine .message-user {
+
+    color: #555;
+
+}
+
+
+.message-time {
+
+    display: block;
+
+    text-align: right;
+
+    font-size: 9px;
+
+    opacity: .45;
+
+    margin-top: 4px;
+
+}
+
+
+.system {
+
+    align-self: center;
+
+    color: #555;
+
+    font-size: 11px;
+
+    margin: 5px;
+
+}
+
+
+/* =========================
+   INPUT
+========================= */
+
+.input {
+
+    padding:
+        15px 25px 20px;
+
+    border-top:
+        1px solid #292e2e;
+
+}
+
+
+.input-row {
+
+    display: flex;
+
+    gap: 8px;
+
+}
+
+
+.message-input {
+
+    flex: 1;
+
+    height: 45px;
+
+    border:
+        1px solid #292e2e;
+
+    border-radius: 11px;
+
+    background: #151818;
+
+    color: white;
+
+    outline: none;
+
+    padding:
+        0 14px;
+
+    font-size: 14px;
+
+}
+
+
+.send {
+
+    width: 52px;
+
+    border: 0;
+
+    border-radius: 11px;
+
+    background: white;
+
+    color: black;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+}
+
+
+.send:hover {
+
+    background: #ddd;
+
+}
+
+
+/* =========================
+   SCROLL
+========================= */
+
+::-webkit-scrollbar {
+
+    width: 5px;
+
+}
+
+
+::-webkit-scrollbar-thumb {
+
+    background: #292e2e;
+
+    border-radius: 10px;
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:700px) {
+
+    .sidebar {
+
+        display: none;
+
+    }
+
+    .chat {
+
+        width: 100%;
+
+    }
+
+    .messages {
+
+        padding:
+            15px;
+
+    }
+
+    .message {
+
+        max-width: 82%;
+
+    }
+
+    .input {
+
+        padding:
+            10px;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar">
+
+
+        <div class="logo">
+
+            <div class="logo-number">
+                17
+            </div>
+
+            <div class="logo-text">
+                MESSENGER
+            </div>
+
+        </div>
+
+
+        <div class="user-box">
+
+            <input
+                id="username"
+                class="username"
+                placeholder="Твоё имя"
+                maxlength="30"
+            >
+
+            <button
+                id="connect"
+                class="connect"
+            >
+                ПОДКЛЮЧИТЬСЯ
+            </button>
+
+        </div>
+
+
+        <div class="online-title">
+            ОНЛАЙН
+        </div>
+
+
+        <div
+            id="users"
+            class="users">
+        </div>
+
+
+    </aside>
+
+
+    <!-- CHAT -->
+
+    <main class="chat">
+
+
+        <header class="chat-header">
+
+
+            <div class="chat-avatar">
+                17
+            </div>
+
+
+            <div class="chat-title">
+
+                <div class="chat-name">
+                    17 Messenger
+                </div>
+
+                <div
+                    id="status"
+                    class="chat-status">
+                    не подключён
+                </div>
+
+            </div>
+
+
+        </header>
+
+
+        <div
+            id="messages"
+            class="messages">
+
+            <div class="system">
+                Добро пожаловать в 17 Messenger
+            </div>
+
+        </div>
+
+
+        <div class="input">
+
+            <div class="input-row">
+
+                <input
+                    id="message"
+                    class="message-input"
+                    placeholder="Написать сообщение..."
+                    autocomplete="off"
+                >
+
+                <button
+                    id="send"
+                    class="send">
+                    ➤
+                </button>
+
+            </div>
+
+        </div>
+
+
+    </main>
+
+
+</div>
+
+
+<script>
+
+/* =========================
+   ELEMENTS
+========================= */
+
+const usernameInput =
+    document.getElementById(
+        "username"
+    );
+
+const connectButton =
+    document.getElementById(
+        "connect"
+    );
+
+const messageInput =
+    document.getElementById(
+        "message"
+    );
+
+const sendButton =
+    document.getElementById(
+        "send"
+    );
+
+const messages =
+    document.getElementById(
+        "messages"
+    );
+
+const users =
+    document.getElementById(
+        "users"
+    );
+
+const status =
+    document.getElementById(
+        "status"
+    );
+
+
+/* =========================
+   SOCKET
+========================= */
+
+let socket = null;
+
+let myName = "";
+
+
+/* =========================
+   CONNECT
+========================= */
+
+function connect() {
+
+    myName =
+        usernameInput.value.trim();
+
+
+    if (!myName) {
+
+        alert(
+            "Введите своё имя"
+        );
+
+        return;
+
+    }
+
+
+    if (
+        socket &&
+        socket.readyState ===
+        WebSocket.OPEN
+    ) {
+
+        return;
+
+    }
+
+
+    /*
+       Если сайт открыт через
+       localhost, подключаемся
+       к этому же компьютеру.
+    */
+
+    const protocol =
+        location.protocol === "https:"
+            ? "wss:"
+            : "ws:";
+
+
+    socket =
+        new WebSocket(
+            protocol +
+            "//" +
+            location.host
+        );
+
+
+    socket.onopen =
+        function() {
+
+            status.textContent =
+                "● онлайн";
+
+            status.style.color =
+                "#62e879";
+
+
+            socket.send(
+                JSON.stringify({
+
+                    type: "login",
+
+                    username: myName
+
+                })
+            );
+
+
+            connectButton.textContent =
+                "ПОДКЛЮЧЕНО";
+
+        };
+
+
+    socket.onmessage =
+        function(event) {
+
+            let data;
+
+            try {
+
+                data =
+                    JSON.parse(
+                        event.data
+                    );
+
+            } catch {
+
+                return;
+
+            }
+
+
+            /* MESSAGE */
+
+            if (
+                data.type ===
+                "message"
+            ) {
+
+                addMessage(
+                    data
+                );
+
+            }
+
+
+            /* SYSTEM */
+
+            if (
+                data.type ===
+                "system"
+            ) {
+
+                addSystemMessage(
+                    data.text
+                );
+
+            }
+
+
+            /* USERS */
+
+            if (
+                data.type ===
+                "users"
+            ) {
+
+                renderUsers(
+                    data.users
+                );
+
+            }
+
+        };
+
+
+    socket.onclose =
+        function() {
+
+            status.textContent =
+                "● не подключён";
+
+            status.style.color =
+                "#777";
+
+            connectButton.textContent =
+                "ПОДКЛЮЧИТЬСЯ";
+
+        };
+
+
+    socket.onerror =
+        function() {
+
+            status.textContent =
+                "● ошибка подключения";
+
+            status.style.color =
+                "#ff5555";
+
+        };
+
+}
+
+
+/* =========================
+   SEND
+========================= */
+
+function sendMessage() {
+
+    const text =
+        messageInput.value.trim();
+
+
+    if (!text) {
+        return;
+    }
+
+
+    if (
+        !socket ||
+        socket.readyState !==
+        WebSocket.OPEN
+    ) {
+
+        alert(
+            "Сначала подключитесь к серверу"
+        );
+
+        return;
+
+    }
+
+
+    socket.send(
+        JSON.stringify({
+
+            type: "message",
+
+            text
+
+        })
+    );
+
+
+    messageInput.value = "";
+
+    messageInput.focus();
+
+}
+
+
+/* =========================
+   ADD MESSAGE
+========================= */
+
+function addMessage(data) {
+
+    const element =
+        document.createElement(
+            "div"
+        );
+
+
+    element.className =
+        "message";
+
+
+    if (
+        data.username === myName
+    ) {
+
+        element.classList.add(
+            "mine"
+        );
+
+    }
+
+
+    const username =
+        document.createElement(
+            "div"
+        );
+
+
+    username.className =
+        "message-user";
+
+
+    username.textContent =
+        data.username;
+
+
+    const text =
+        document.createElement(
+            "div"
+        );
+
+
+    text.textContent =
+        data.text;
+
+
+    const time =
+        document.createElement(
+            "span"
+        );
+
+
+    time.className =
+        "message-time";
+
+
+    time.textContent =
+        data.time;
+
+
+    element.appendChild(
+        username
+    );
+
+    element.appendChild(
+        text
+    );
+
+    element.appendChild(
+        time
+    );
+
+
+    messages.appendChild(
+        element
+    );
+
+
+    messages.scrollTop =
+        messages.scrollHeight;
+
+}
+
+
+/* =========================
+   SYSTEM MESSAGE
+========================= */
+
+function addSystemMessage(
+    text
+) {
+
+    const element =
+        document.createElement(
+            "div"
+        );
+
+
+    element.className =
+        "system";
+
+
+    element.textContent =
+        text;
+
+
+    messages.appendChild(
+        element
+    );
+
+
+    messages.scrollTop =
+        messages.scrollHeight;
+
+}
+
+
+/* =========================
+   USERS
+========================= */
+
+function renderUsers(
+    list
+) {
+
+    users.innerHTML = "";
+
+
+    list.forEach(
+        function(name) {
+
+            const element =
+                document.createElement(
+                    "div"
+                );
+
+
+            element.className =
+                "user";
+
+
+            element.textContent =
+                name;
+
+
+            users.appendChild(
+                element
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================
+   EVENTS
+========================= */
+
+connectButton.addEventListener(
+    "click",
+    connect
+);
+
+
+sendButton.addEventListener(
+    "click",
+    sendMessage
+);
+
+
+messageInput.addEventListener(
+    "keydown",
+    function(event) {
+
+        if (
+            event.key ===
+            "Enter"
+        ) {
+
+            event.preventDefault();
+
+            sendMessage();
+
+        }
+
+    }
+);
+
+
+/* =========================
+   AUTO NAME
+========================= */
+
+const savedName =
+    localStorage.getItem(
+        "17Username"
+    );
+
+
+if (savedName) {
+
+    usernameInput.value =
+        savedName;
+
+}
+
+
+usernameInput.addEventListener(
+    "change",
+    function() {
+
+        localStorage.setItem(
+            "17Username",
+            usernameInput.value
+        );
+
+    }
+);
+
+</script>
+
+</body>
+</html>
