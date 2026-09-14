@@ -1,615 +1,578 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>17 Messenger</title>
-
-    <style>
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family:
-                -apple-system,
-                BlinkMacSystemFont,
-                "Segoe UI",
-                Arial,
-                sans-serif;
-
-            background: #f2f2f7;
-            color: #111;
-        }
-
-        button,
-        input {
-            font: inherit;
-        }
-
-        /* LOGIN */
-
-        #loginScreen {
-            position: fixed;
-            inset: 0;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            background: #f2f2f7;
-        }
-
-        .loginBox {
-            width: min(420px, 90%);
-            background: white;
-
-            padding: 35px;
-            border-radius: 24px;
-
-            box-shadow:
-                0 10px 40px rgba(0,0,0,.12);
-
-            text-align: center;
-        }
-
-        .logo {
-            font-size: 48px;
-            font-weight: 800;
-            margin-bottom: 5px;
-        }
-
-        .subtitle {
-            color: #777;
-            margin-bottom: 30px;
-        }
-
-        .loginBox input {
-            width: 100%;
-
-            padding: 15px;
-
-            border: 1px solid #ddd;
-            border-radius: 14px;
-
-            outline: none;
-
-            margin-bottom: 12px;
-        }
-
-        .loginBox button {
-            width: 100%;
-
-            padding: 15px;
-
-            border: 0;
-            border-radius: 14px;
-
-            background: #111;
-            color: white;
-
-            cursor: pointer;
-        }
-
-        /* APP */
-
-        #app {
-            display: none;
-
-            height: 100vh;
-            height: 100dvh;
-        }
-
-        /* USERS */
-
-        #usersPanel {
-            width: 300px;
-
-            background: white;
-
-            border-right: 1px solid #ddd;
-
-            display: flex;
-            flex-direction: column;
-        }
-
-        .header {
-            padding: 20px;
-
-            border-bottom: 1px solid #eee;
-        }
-
-        .headerLogo {
-            font-size: 30px;
-            font-weight: 800;
-        }
-
-        .myName {
-            color: #777;
-            margin-top: 4px;
-            font-size: 14px;
-        }
-
-        .onlineTitle {
-            padding: 15px 20px 8px;
-
-            font-size: 13px;
-            color: #888;
-        }
-
-        #usersList {
-            overflow-y: auto;
-            flex: 1;
-        }
-
-        .user {
-            padding: 15px 20px;
-
-            cursor: pointer;
-
-            display: flex;
-            align-items: center;
-
-            gap: 12px;
-        }
-
-        .user:hover {
-            background: #f5f5f5;
-        }
-
-        .user.active {
-            background: #e9e9ee;
-        }
-
-        .avatar {
-            width: 42px;
-            height: 42px;
-
-            border-radius: 50%;
-
-            background: #111;
-            color: white;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            font-weight: 700;
-        }
-
-        .userName {
-            font-weight: 600;
-        }
-
-        .onlineDot {
-            width: 8px;
-            height: 8px;
-
-            border-radius: 50%;
-
-            background: #30c45a;
-
-            margin-left: auto;
-        }
-
-        /* CHAT */
-
-        #chat {
-            flex: 1;
-
-            display: flex;
-            flex-direction: column;
-
-            min-width: 0;
-        }
-
-        #chatHeader {
-            height: 70px;
-
-            background: white;
-
-            border-bottom: 1px solid #ddd;
-
-            display: flex;
-            align-items: center;
-
-            padding: 0 20px;
-
-            font-weight: 700;
-        }
-
-        #chatName {
-            font-size: 17px;
-        }
-
-        #messages {
-            flex: 1;
-
-            overflow-y: auto;
-
-            padding: 25px;
-
-            display: flex;
-            flex-direction: column;
-
-            gap: 8px;
-        }
-
-        .empty {
-            margin: auto;
-
-            text-align: center;
-
-            color: #999;
-        }
-
-        .message {
-            max-width: 70%;
-
-            padding: 10px 14px;
-
-            border-radius: 18px;
-
-            line-height: 1.4;
-
-            word-wrap: break-word;
-        }
-
-        .message.mine {
-            align-self: flex-end;
-
-            background: #111;
-            color: white;
-
-            border-bottom-right-radius: 5px;
-        }
-
-        .message.theirs {
-            align-self: flex-start;
-
-            background: white;
-
-            border-bottom-left-radius: 5px;
-        }
-
-        .time {
-            font-size: 10px;
-
-            opacity: .55;
-
-            margin-top: 3px;
-
-            text-align: right;
-        }
-
-        #inputArea {
-            background: white;
-
-            border-top: 1px solid #ddd;
-
-            padding: 12px;
-
-            display: flex;
-
-            gap: 10px;
-        }
-
-        #messageInput {
-            flex: 1;
-
-            border: 1px solid #ddd;
-
-            border-radius: 22px;
-
-            padding: 12px 16px;
-
-            outline: none;
-        }
-
-        #sendButton {
-            width: 48px;
-            height: 48px;
-
-            border: 0;
-
-            border-radius: 50%;
-
-            background: #111;
-            color: white;
-
-            cursor: pointer;
-
-            font-size: 20px;
-        }
-
-        #connectionStatus {
-            position: fixed;
-
-            top: 10px;
-            right: 15px;
-
-            font-size: 12px;
-
-            z-index: 20;
-        }
-
-        /* MOBILE */
-
-        @media (max-width: 700px) {
-
-            #usersPanel {
-                width: 100%;
-            }
-
-            #chat {
-                display: none;
-            }
-
-            #app.chatOpen #usersPanel {
-                display: none;
-            }
-
-            #app.chatOpen #chat {
-                display: flex;
-            }
-
-            #backButton {
-                display: block;
-            }
-
-            .message {
-                max-width: 82%;
-            }
-        }
-
-        @media (min-width: 701px) {
-
-            #backButton {
-                display: none;
-            }
-
-        }
-
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>17 Messenger</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: #f4f5f7;
+    color: #111;
+}
+
+button,
+input {
+    font: inherit;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* AUTH */
+
+#loginScreen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.authBox {
+    width: 100%;
+    max-width: 400px;
+    background: white;
+    border-radius: 24px;
+    padding: 35px;
+    box-shadow: 0 15px 50px rgba(0,0,0,.08);
+}
+
+.logo {
+    text-align: center;
+    font-size: 48px;
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #777;
+    margin-bottom: 30px;
+}
+
+.authBox input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    outline: none;
+}
+
+.authBox input:focus {
+    border-color: #111;
+}
+
+.authButton {
+    width: 100%;
+    border: 0;
+    border-radius: 12px;
+    padding: 14px;
+    background: #111;
+    color: white;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+.authButton:hover {
+    opacity: .9;
+}
+
+.switchAuth {
+    text-align: center;
+    margin-top: 20px;
+    color: #666;
+    cursor: pointer;
+}
+
+.switchAuth:hover {
+    color: #111;
+}
+
+.authError {
+    color: #d00;
+    min-height: 20px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+/* APP */
+
+#app {
+    height: 100vh;
+    display: flex;
+    overflow: hidden;
+}
+
+.sidebar {
+    width: 320px;
+    background: white;
+    border-right: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebarHeader {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.brand {
+    font-size: 30px;
+    font-weight: 800;
+}
+
+.myAccount {
+    margin-top: 8px;
+    color: #777;
+    font-size: 14px;
+}
+
+.usersTitle {
+    padding: 18px 20px 10px;
+    font-size: 13px;
+    color: #888;
+    text-transform: uppercase;
+}
+
+#usersList {
+    overflow-y: auto;
+    flex: 1;
+}
+
+.user {
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #f2f2f2;
+}
+
+.user:hover {
+    background: #f5f5f5;
+}
+
+.user.active {
+    background: #eee;
+}
+
+.avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #111;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+.userInfo {
+    flex: 1;
+}
+
+.userName {
+    font-weight: 600;
+}
+
+.status {
+    font-size: 12px;
+    color: #999;
+    margin-top: 3px;
+}
+
+.status.online {
+    color: #159447;
+}
+
+/* CHAT */
+
+.chat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.chatHeader {
+    height: 72px;
+    background: white;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    padding: 0 25px;
+}
+
+.chatName {
+    font-weight: 700;
+    font-size: 18px;
+}
+
+.chatStatus {
+    font-size: 12px;
+    color: #999;
+    margin-top: 3px;
+}
+
+#messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.emptyChat {
+    margin: auto;
+    color: #999;
+    text-align: center;
+}
+
+.message {
+    max-width: 70%;
+    padding: 10px 14px;
+    border-radius: 16px;
+    word-wrap: break-word;
+    line-height: 1.4;
+}
+
+.message.mine {
+    align-self: flex-end;
+    background: #111;
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+.message.theirs {
+    align-self: flex-start;
+    background: white;
+    border: 1px solid #eee;
+    border-bottom-left-radius: 4px;
+}
+
+.messageTime {
+    font-size: 10px;
+    opacity: .55;
+    margin-top: 4px;
+    text-align: right;
+}
+
+.messageForm {
+    background: white;
+    border-top: 1px solid #ddd;
+    padding: 15px;
+    display: flex;
+    gap: 10px;
+}
+
+#messageInput {
+    flex: 1;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    padding: 12px 16px;
+    outline: none;
+}
+
+#sendButton {
+    border: 0;
+    background: #111;
+    color: white;
+    border-radius: 20px;
+    padding: 0 22px;
+    cursor: pointer;
+}
+
+.mobileBack {
+    display: none;
+}
+
+@media (max-width: 700px) {
+
+    .sidebar {
+        width: 100%;
+    }
+
+    .chat {
+        display: none;
+        width: 100%;
+    }
+
+    #app.chatOpen .sidebar {
+        display: none;
+    }
+
+    #app.chatOpen .chat {
+        display: flex;
+    }
+
+    .mobileBack {
+        display: block;
+        margin-right: 15px;
+        border: 0;
+        background: none;
+        font-size: 24px;
+        cursor: pointer;
+    }
+
+    .message {
+        max-width: 85%;
+    }
+}
+</style>
 </head>
 
 <body>
 
-<!-- LOGIN -->
+<!-- AUTH -->
 
 <div id="loginScreen">
 
-    <div class="loginBox">
+    <div class="authBox">
 
         <div class="logo">17</div>
 
-        <div class="subtitle">
-            17 Messenger
+        <div class="subtitle" id="authSubtitle">
+            Войдите в Messenger
         </div>
 
         <input
-            id="nameInput"
+            id="usernameInput"
             type="text"
-            maxlength="30"
-            placeholder="Введите ваше имя"
-            autocomplete="off"
+            placeholder="Логин"
+            autocomplete="username"
         >
 
-        <button id="loginButton">
+        <input
+            id="passwordInput"
+            type="password"
+            placeholder="Пароль"
+            autocomplete="current-password"
+        >
+
+        <button
+            class="authButton"
+            id="authButton"
+        >
             Войти
         </button>
+
+        <div
+            class="switchAuth"
+            id="switchAuth"
+        >
+            Нет аккаунта? Зарегистрироваться
+        </div>
+
+        <div
+            class="authError"
+            id="authError"
+        ></div>
 
     </div>
 
 </div>
 
-
 <!-- APP -->
 
-<div id="app">
+<div id="app" class="hidden">
 
-    <div id="usersPanel">
+    <aside class="sidebar">
 
-        <div class="header">
+        <div class="sidebarHeader">
 
-            <div class="headerLogo">
+            <div class="brand">
                 17
             </div>
 
-            <div
-                class="myName"
-                id="myName"
-            ></div>
+            <div class="myAccount">
+                Вы: <strong id="myUsername"></strong>
+            </div>
 
         </div>
 
-        <div class="onlineTitle">
-            ОНЛАЙН
+        <div class="usersTitle">
+            Пользователи
         </div>
 
         <div id="usersList"></div>
 
-    </div>
+    </aside>
 
+    <main class="chat">
 
-    <div id="chat">
-
-        <div id="chatHeader">
+        <div class="chatHeader">
 
             <button
-                id="backButton"
-                style="
-                    border:0;
-                    background:none;
-                    font-size:22px;
-                    margin-right:10px;
-                    cursor:pointer;
-                "
+                class="mobileBack"
+                id="mobileBack"
             >
-                ‹
+                ←
             </button>
 
-            <div id="chatName">
-                Выберите пользователя
+            <div>
+
+                <div
+                    class="chatName"
+                    id="chatName"
+                >
+                    Выберите пользователя
+                </div>
+
+                <div
+                    class="chatStatus"
+                    id="chatStatus"
+                ></div>
+
             </div>
 
         </div>
-
 
         <div id="messages">
 
-            <div class="empty">
-                Выберите пользователя,
-                чтобы начать чат
+            <div class="emptyChat">
+                Выберите пользователя для начала общения
             </div>
 
         </div>
 
-
-        <div id="inputArea">
+        <div class="messageForm">
 
             <input
                 id="messageInput"
                 type="text"
-                placeholder="Сообщение..."
-                autocomplete="off"
+                placeholder="Написать сообщение..."
+                disabled
             >
 
-            <button id="sendButton">
-                ➤
+            <button
+                id="sendButton"
+                disabled
+            >
+                Отправить
             </button>
 
         </div>
 
-    </div>
+    </main>
 
 </div>
-
-
-<div id="connectionStatus">
-    ● подключение...
-</div>
-
 
 <script>
 
 let socket = null;
 
-let myName = "";
+let currentUser = null;
 
-let selectedUser = "";
+let selectedUser = null;
 
-let onlineUsers = [];
+let isRegisterMode = false;
 
-const conversations = {};
+let users = [];
 
 const loginScreen =
-    document.getElementById(
-        "loginScreen"
-    );
+    document.getElementById("loginScreen");
 
 const app =
-    document.getElementById(
-        "app"
-    );
+    document.getElementById("app");
 
-const nameInput =
-    document.getElementById(
-        "nameInput"
-    );
+const usernameInput =
+    document.getElementById("usernameInput");
 
-const loginButton =
-    document.getElementById(
-        "loginButton"
-    );
+const passwordInput =
+    document.getElementById("passwordInput");
+
+const authButton =
+    document.getElementById("authButton");
+
+const switchAuth =
+    document.getElementById("switchAuth");
+
+const authSubtitle =
+    document.getElementById("authSubtitle");
+
+const authError =
+    document.getElementById("authError");
 
 const usersList =
-    document.getElementById(
-        "usersList"
-    );
+    document.getElementById("usersList");
 
-const messages =
-    document.getElementById(
-        "messages"
-    );
-
-const messageInput =
-    document.getElementById(
-        "messageInput"
-    );
-
-const sendButton =
-    document.getElementById(
-        "sendButton"
-    );
+const myUsername =
+    document.getElementById("myUsername");
 
 const chatName =
-    document.getElementById(
-        "chatName"
-    );
+    document.getElementById("chatName");
 
-const connectionStatus =
-    document.getElementById(
-        "connectionStatus"
-    );
+const chatStatus =
+    document.getElementById("chatStatus");
 
-const myNameElement =
-    document.getElementById(
-        "myName"
-    );
+const messages =
+    document.getElementById("messages");
+
+const messageInput =
+    document.getElementById("messageInput");
+
+const sendButton =
+    document.getElementById("sendButton");
+
+const mobileBack =
+    document.getElementById("mobileBack");
 
 
-/* LOGIN */
+/* =========================
+   AUTH MODE
+========================= */
 
-loginButton.onclick = login;
+switchAuth.addEventListener(
+    "click",
+    () => {
 
-nameInput.addEventListener(
-    "keydown",
-    function(event) {
+        isRegisterMode =
+            !isRegisterMode;
 
-        if (event.key === "Enter") {
-            login();
+        authError.textContent = "";
+
+        if (isRegisterMode) {
+
+            authSubtitle.textContent =
+                "Создайте аккаунт";
+
+            authButton.textContent =
+                "Зарегистрироваться";
+
+            switchAuth.textContent =
+                "Уже есть аккаунт? Войти";
+
+        } else {
+
+            authSubtitle.textContent =
+                "Войдите в Messenger";
+
+            authButton.textContent =
+                "Войти";
+
+            switchAuth.textContent =
+                "Нет аккаунта? Зарегистрироваться";
         }
-
     }
 );
 
 
-function login() {
-
-    const name =
-        nameInput.value
-        .trim()
-        .substring(0, 30);
-
-    if (!name) {
-        return;
-    }
-
-    myName = name;
-
-    connect();
-
-}
-
-
-/* CONNECT */
+/* =========================
+   WEBSOCKET
+========================= */
 
 function connect() {
-
-    if (
-        socket &&
-        socket.readyState ===
-        WebSocket.OPEN
-    ) {
-        return;
-    }
 
     const protocol =
         location.protocol === "https:"
@@ -623,305 +586,349 @@ function connect() {
             location.host
         );
 
-
-    socket.onopen = function() {
-
-        connectionStatus.textContent =
-            "● онлайн";
-
-        connectionStatus.style.color =
-            "#30c45a";
-
-        socket.send(
-            JSON.stringify({
-                type: "login",
-                username: myName
-            })
-        );
-
-    };
-
-
-    socket.onclose = function() {
-
-        connectionStatus.textContent =
-            "● отключён";
-
-        connectionStatus.style.color =
-            "#e53935";
-
-    };
-
-
-    socket.onerror = function() {
-
-        connectionStatus.textContent =
-            "● ошибка соединения";
-
-        connectionStatus.style.color =
-            "#e53935";
-
-    };
-
-
-    socket.onmessage =
-        function(event) {
-
-            let data;
-
-            try {
-
-                data =
-                    JSON.parse(
-                        event.data
-                    );
-
-            } catch {
-
-                return;
-
-            }
-
-
-            /* LOGIN */
-
-            if (
-                data.type ===
-                "login_success"
-            ) {
-
-                loginScreen.style.display =
-                    "none";
-
-                app.style.display =
-                    "flex";
-
-                myNameElement.textContent =
-                    myName;
-
-                return;
-            }
-
-
-            /* USERS */
-
-            if (
-                data.type ===
-                "users"
-            ) {
-
-                onlineUsers =
-                    data.users || [];
-
-                renderUsers();
-
-                return;
-            }
-
-
-            /* PRIVATE MESSAGE */
-
-            if (
-                data.type ===
-                "private_message"
-            ) {
-
-                const otherUser =
-                    data.from === myName
-                        ? data.to
-                        : data.from;
-
-
-                if (
-                    !conversations[
-                        otherUser
-                    ]
-                ) {
-
-                    conversations[
-                        otherUser
-                    ] = [];
-
-                }
-
-
-                conversations[
-                    otherUser
-                ].push(data);
-
-
-                if (
-                    selectedUser ===
-                    otherUser
-                ) {
-
-                    renderMessages();
-
-                }
-
-                return;
-            }
-
-
-            /* ERROR */
-
-            if (
-                data.type ===
-                "error"
-            ) {
-
-                alert(data.text);
-
-            }
-
-        };
-
-}
-
-
-/* USERS */
-
-function renderUsers() {
-
-    usersList.innerHTML = "";
-
-    const users =
-        onlineUsers.filter(
-            user =>
-                user !== myName
-        );
-
-
-    if (users.length === 0) {
-
-        usersList.innerHTML = `
-            <div
-                style="
-                    padding:20px;
-                    color:#999;
-                    text-align:center;
-                "
-            >
-                Пока никого нет
-            </div>
-        `;
-
-        return;
-    }
-
-
-    users.forEach(
-        function(username) {
-
-            const item =
-                document.createElement(
-                    "div"
-                );
-
-            item.className =
-                "user";
-
-
-            if (
-                username ===
-                selectedUser
-            ) {
-
-                item.classList.add(
-                    "active"
-                );
-
-            }
-
-
-            const avatar =
-                document.createElement(
-                    "div"
-                );
-
-            avatar.className =
-                "avatar";
-
-            avatar.textContent =
-                username
-                .charAt(0)
-                .toUpperCase();
-
-
-            const name =
-                document.createElement(
-                    "div"
-                );
-
-            name.className =
-                "userName";
-
-            name.textContent =
-                username;
-
-
-            const dot =
-                document.createElement(
-                    "div"
-                );
-
-            dot.className =
-                "onlineDot";
-
-
-            item.appendChild(
-                avatar
-            );
-
-            item.appendChild(
-                name
-            );
-
-            item.appendChild(
-                dot
-            );
-
-
-            item.onclick =
-                function() {
-
-                    openChat(username);
-
-                };
-
-
-            usersList.appendChild(
-                item
+    socket.addEventListener(
+        "open",
+        () => {
+
+            console.log(
+                "WebSocket подключён"
             );
 
         }
     );
 
+    socket.addEventListener(
+        "message",
+        event => {
+
+            let data;
+
+            try {
+                data =
+                    JSON.parse(event.data);
+            } catch {
+                return;
+            }
+
+            handleServerMessage(data);
+        }
+    );
+
+    socket.addEventListener(
+        "close",
+        () => {
+
+            console.log(
+                "WebSocket отключён"
+            );
+
+        }
+    );
+
+    socket.addEventListener(
+        "error",
+        () => {
+
+            authError.textContent =
+                "Ошибка подключения к серверу";
+
+        }
+    );
 }
 
 
-/* OPEN CHAT */
+/* =========================
+   SERVER EVENTS
+========================= */
 
-function openChat(username) {
+function handleServerMessage(data) {
 
-    selectedUser =
-        username;
+    if (data.type === "auth_success") {
 
-    if (
-        !conversations[
-            username
-        ]
-    ) {
+        currentUser =
+            data.user;
 
-        conversations[
-            username
-        ] = [];
+        loginScreen.classList.add(
+            "hidden"
+        );
 
+        app.classList.remove(
+            "hidden"
+        );
+
+        myUsername.textContent =
+            currentUser.username;
+
+        authError.textContent = "";
+
+        return;
     }
 
 
+    if (data.type === "error") {
+
+        authError.textContent =
+            data.text;
+
+        return;
+    }
+
+
+    if (data.type === "users") {
+
+        users =
+            data.users;
+
+        renderUsers();
+
+        return;
+    }
+
+
+    if (data.type === "history") {
+
+        if (
+            !selectedUser ||
+            data.userId !== selectedUser.id
+        ) {
+            return;
+        }
+
+        renderMessages(
+            data.messages
+        );
+
+        return;
+    }
+
+
+    if (data.type === "private_message") {
+
+        if (!selectedUser) {
+            return;
+        }
+
+        const belongsToChat =
+            (
+                data.from === currentUser.id &&
+                data.to === selectedUser.id
+            )
+            ||
+            (
+                data.from === selectedUser.id &&
+                data.to === currentUser.id
+            );
+
+        if (!belongsToChat) {
+            return;
+        }
+
+        appendMessage(data);
+
+        return;
+    }
+}
+
+
+/* =========================
+   AUTH
+========================= */
+
+authButton.addEventListener(
+    "click",
+    authenticate
+);
+
+passwordInput.addEventListener(
+    "keydown",
+    event => {
+
+        if (event.key === "Enter") {
+            authenticate();
+        }
+
+    }
+);
+
+usernameInput.addEventListener(
+    "keydown",
+    event => {
+
+        if (event.key === "Enter") {
+            authenticate();
+        }
+
+    }
+);
+
+
+function authenticate() {
+
+    const username =
+        usernameInput.value.trim();
+
+    const password =
+        passwordInput.value;
+
+    authError.textContent = "";
+
+    if (!username || !password) {
+
+        authError.textContent =
+            "Введите логин и пароль";
+
+        return;
+    }
+
+    if (
+        socket &&
+        socket.readyState ===
+        WebSocket.OPEN
+    ) {
+
+        socket.send(
+            JSON.stringify({
+
+                type:
+                    isRegisterMode
+                        ? "register"
+                        : "login",
+
+                username:
+                    username,
+
+                password:
+                    password
+            })
+        );
+
+    } else {
+
+        authError.textContent =
+            "Нет подключения к серверу";
+    }
+}
+
+
+/* =========================
+   USERS
+========================= */
+
+function renderUsers() {
+
+    usersList.innerHTML = "";
+
+    users
+        .filter(
+            user =>
+                user.id !==
+                currentUser?.id
+        )
+        .forEach(user => {
+
+            const element =
+                document.createElement("div");
+
+            element.className =
+                "user";
+
+            if (
+                selectedUser &&
+                selectedUser.id === user.id
+            ) {
+
+                element.classList.add(
+                    "active"
+                );
+            }
+
+            const avatar =
+                document.createElement("div");
+
+            avatar.className =
+                "avatar";
+
+            avatar.textContent =
+                user.username
+                    .charAt(0)
+                    .toUpperCase();
+
+            const info =
+                document.createElement("div");
+
+            info.className =
+                "userInfo";
+
+            const name =
+                document.createElement("div");
+
+            name.className =
+                "userName";
+
+            name.textContent =
+                user.username;
+
+            const status =
+                document.createElement("div");
+
+            status.className =
+                "status";
+
+            if (user.online) {
+
+                status.classList.add(
+                    "online"
+                );
+
+                status.textContent =
+                    "онлайн";
+
+            } else {
+
+                status.textContent =
+                    "не в сети";
+            }
+
+            info.appendChild(name);
+            info.appendChild(status);
+
+            element.appendChild(avatar);
+            element.appendChild(info);
+
+            element.addEventListener(
+                "click",
+                () => selectUser(user)
+            );
+
+            usersList.appendChild(
+                element
+            );
+        });
+}
+
+
+/* =========================
+   SELECT USER
+========================= */
+
+function selectUser(user) {
+
+    selectedUser =
+        user;
+
     chatName.textContent =
-        username;
+        user.username;
+
+    chatStatus.textContent =
+        user.online
+            ? "онлайн"
+            : "не в сети";
+
+    messageInput.disabled =
+        false;
+
+    sendButton.disabled =
+        false;
 
     app.classList.add(
         "chatOpen"
@@ -929,133 +936,177 @@ function openChat(username) {
 
     renderUsers();
 
-    renderMessages();
+    messages.innerHTML = "";
 
-    messageInput.focus();
+    const loading =
+        document.createElement("div");
 
+    loading.className =
+        "emptyChat";
+
+    loading.textContent =
+        "Загрузка истории...";
+
+    messages.appendChild(
+        loading
+    );
+
+    socket.send(
+        JSON.stringify({
+
+            type:
+                "get_history",
+
+            userId:
+                user.id
+        })
+    );
 }
 
 
-/* MESSAGES */
+/* =========================
+   HISTORY
+========================= */
 
-function renderMessages() {
+function renderMessages(list) {
 
     messages.innerHTML = "";
 
-    const list =
-        conversations[
-            selectedUser
-        ] || [];
+    if (!list.length) {
 
+        const empty =
+            document.createElement("div");
 
-    if (list.length === 0) {
+        empty.className =
+            "emptyChat";
 
-        messages.innerHTML = `
-            <div class="empty">
-                Нет сообщений.<br>
-                Напишите первым.
-            </div>
-        `;
+        empty.textContent =
+            "Сообщений пока нет";
 
-        return;
-    }
-
-
-    list.forEach(
-        function(message) {
-
-            const bubble =
-                document.createElement(
-                    "div"
-                );
-
-
-            bubble.className =
-                "message " +
-                (
-                    message.from === myName
-                        ? "mine"
-                        : "theirs"
-                );
-
-
-            const text =
-                document.createElement(
-                    "div"
-                );
-
-            text.textContent =
-                message.text;
-
-
-            const time =
-                document.createElement(
-                    "div"
-                );
-
-            time.className =
-                "time";
-
-            time.textContent =
-                message.time;
-
-
-            bubble.appendChild(
-                text
-            );
-
-            bubble.appendChild(
-                time
-            );
-
-
-            messages.appendChild(
-                bubble
-            );
-
-        }
-    );
-
-
-    messages.scrollTop =
-        messages.scrollHeight;
-
-}
-
-
-/* SEND */
-
-function sendMessage() {
-
-    const text =
-        messageInput.value
-        .trim();
-
-
-    if (
-        !text ||
-        !selectedUser
-    ) {
-
-        return;
-
-    }
-
-
-    if (
-        !socket ||
-        socket.readyState !==
-        WebSocket.OPEN
-    ) {
-
-        alert(
-            "Нет подключения к серверу"
+        messages.appendChild(
+            empty
         );
 
         return;
-
     }
 
+    list.forEach(
+        appendMessage
+    );
+
+    scrollMessages();
+}
+
+
+/* =========================
+   MESSAGE
+========================= */
+
+function appendMessage(message) {
+
+    if (
+        messages.querySelector(
+            `[data-message-id="${message.id}"]`
+        )
+    ) {
+        return;
+    }
+
+    const element =
+        document.createElement("div");
+
+    element.className =
+        "message";
+
+    element.dataset.messageId =
+        message.id;
+
+    if (
+        message.from ===
+        currentUser.id
+    ) {
+
+        element.classList.add(
+            "mine"
+        );
+
+    } else {
+
+        element.classList.add(
+            "theirs"
+        );
+    }
+
+    const text =
+        document.createElement("div");
+
+    text.textContent =
+        message.text;
+
+    const time =
+        document.createElement("div");
+
+    time.className =
+        "messageTime";
+
+    time.textContent =
+        message.time;
+
+    element.appendChild(text);
+    element.appendChild(time);
+
+    messages.appendChild(
+        element
+    );
+
+    scrollMessages();
+}
+
+
+function scrollMessages() {
+
+    messages.scrollTop =
+        messages.scrollHeight;
+}
+
+
+/* =========================
+   SEND
+========================= */
+
+sendButton.addEventListener(
+    "click",
+    sendMessage
+);
+
+messageInput.addEventListener(
+    "keydown",
+    event => {
+
+        if (
+            event.key === "Enter"
+        ) {
+
+            event.preventDefault();
+
+            sendMessage();
+        }
+
+    }
+);
+
+
+function sendMessage() {
+
+    if (
+        !selectedUser ||
+        !messageInput.value.trim()
+    ) {
+        return;
+    }
+
+    const text =
+        messageInput.value.trim();
 
     socket.send(
         JSON.stringify({
@@ -1064,61 +1115,60 @@ function sendMessage() {
                 "private_message",
 
             to:
-                selectedUser,
+                selectedUser.id,
 
             text:
                 text
-
         })
     );
-
 
     messageInput.value = "";
 
     messageInput.focus();
-
 }
 
 
-sendButton.onclick =
-    sendMessage;
+/* =========================
+   MOBILE BACK
+========================= */
 
-
-messageInput.addEventListener(
-    "keydown",
-    function(event) {
-
-        if (
-            event.key === "Enter"
-        ) {
-
-            sendMessage();
-
-        }
-
-    }
-);
-
-
-/* BACK ON MOBILE */
-
-document
-    .getElementById(
-        "backButton"
-    )
-    .onclick =
-    function() {
+mobileBack.addEventListener(
+    "click",
+    () => {
 
         app.classList.remove(
             "chatOpen"
         );
 
-    };
+        selectedUser =
+            null;
+
+        messageInput.disabled =
+            true;
+
+        sendButton.disabled =
+            true;
+
+        chatName.textContent =
+            "Выберите пользователя";
+
+        chatStatus.textContent = "";
+
+        messages.innerHTML =
+            `<div class="emptyChat">
+                Выберите пользователя для начала общения
+            </div>`;
+
+        renderUsers();
+    }
+);
 
 
-/* AUTO LOGIN */
+/* =========================
+   START
+========================= */
 
-nameInput.focus();
+connect();
 
 </script>
 
