@@ -39,19 +39,15 @@ const server = http.createServer((req, res) => {
     });
 });
 
-
 const wss = new WebSocket.Server({
     server
 });
 
-
 const users = new Map();
-
 
 wss.on("connection", (socket) => {
 
     console.log("Новое подключение");
-
 
     socket.on("message", (data) => {
 
@@ -63,100 +59,137 @@ wss.on("connection", (socket) => {
             return;
         }
 
-
-        /*
-         * Пользователь подключился
-         */
-
+        // Вход пользователя
         if (message.type === "login") {
 
-            const username =
-                String(message.username || "Гость")
-                .substring(0, 30);
+            const username = String(
+                message.username || "Гость"
+            )
+            .trim()
+            .substring(0, 30);
+
+            if (!username) {
+                return;
+            }
 
             users.set(socket, username);
 
-            broadcast({
-                type: "system",
-                text: username + " подключился"
-            });
+            socket.send(JSON.stringify({
+                type: "login_success",
+                username: username
+            }));
 
             broadcastUsers();
+
+            console.log(
+                username + " подключился"
+            );
 
             return;
         }
 
+        // Личное сообщение
+        if (message.type === "private_message") {
 
-        /*
-         * Сообщение
-         */
+            const sender = users.get(socket);
 
-        if (message.type === "message") {
-
-            const username =
-                users.get(socket) || "Гость";
-
-            const text =
-                String(message.text || "")
-                .trim()
-                .substring(0, 2000);
-
-            if (!text) {
+            if (!sender) {
                 return;
             }
 
+            const recipient = String(
+                message.to || ""
+            )
+            .trim()
+            .substring(0, 30);
 
-            broadcast({
+            const text = String(
+                message.text || ""
+            )
+            .trim()
+            .substring(0, 2000);
 
-                type: "message",
+            if (!recipient || !text) {
+                return;
+            }
 
-                username,
+            let recipientSocket = null;
 
-                text,
+            for (const [client, username] of users.entries()) {
 
-                time:
-                    new Date().toLocaleTimeString(
-                        "ru-RU",
-                        {
-                            hour: "2-digit",
-                            minute: "2-digit"
-                        }
-                    )
+                if (username === recipient) {
+                    recipientSocket = client;
+                    break;
+                }
+            }
 
-            });
+            if (!recipientSocket) {
 
+                socket.send(JSON.stringify({
+                    type: "error",
+                    text: "Пользователь не в сети"
+                }));
+
+                return;
+            }
+
+            const time = new Date().toLocaleTimeString(
+                "ru-RU",
+                {
+                    hour: "2-digit",
+                    minute: "2-digit"
+                }
+            );
+
+            const privateMessage = {
+                type: "private_message",
+                from: sender,
+                to: recipient,
+                text: text,
+                time: time
+            };
+
+            // Отправляем получателю
+            recipientSocket.send(
+                JSON.stringify(privateMessage)
+            );
+
+            // Отправляем копию отправителю
+            socket.send(
+                JSON.stringify(privateMessage)
+            );
+
+            return;
         }
-
     });
-
 
     socket.on("close", () => {
 
-        const username =
-            users.get(socket);
+        const username = users.get(socket);
 
         users.delete(socket);
 
         if (username) {
-
-            broadcast({
-                type: "system",
-                text: username + " отключился"
-            });
-
+            console.log(
+                username + " отключился"
+            );
         }
 
         broadcastUsers();
-
     });
-
 });
 
 
-function broadcast(data) {
+function broadcastUsers() {
 
-    const text =
-        JSON.stringify(data);
+    const list = Array.from(
+        users.values()
+    );
+
+    const data = JSON.stringify({
+        type: "users",
+        users: list
+    });
 
     for (const client of wss.clients) {
 
@@ -164,42 +197,26 @@ function broadcast(data) {
             client.readyState ===
             WebSocket.OPEN
         ) {
-
-            client.send(text);
-
+            client.send(data);
         }
-
     }
-
 }
 
 
-function broadcastUsers() {
+server.listen(
+    PORT,
+    "0.0.0.0",
+    () => {
 
-    const list =
-        Array.from(users.values());
-
-    broadcast({
-        type: "users",
-        users: list
-    });
-
-}
-
-
-server.listen(PORT, "0.0.0.0", () => {
-
-    console.log("");
-    console.log("==============================");
-    console.log("       17 MESSENGER");
-    console.log("==============================");
-    console.log("");
-    console.log(
-        "Сервер запущен:"
-    );
-    console.log(
-        "http://localhost:" + PORT
-    );
-    console.log("");
-
-});
+        console.log("");
+        console.log("==============================");
+        console.log("       17 MESSENGER");
+        console.log("==============================");
+        console.log("");
+        console.log("Сервер запущен:");
+        console.log(
+            "http://localhost:" + PORT
+        );
+        console.log("");
+    }
+);

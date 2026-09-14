@@ -1,710 +1,537 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-<meta charset="UTF-8">
+    <title>17 Messenger</title>
 
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
+    <style>
 
-<title>17 Messenger</title>
+        * {
+            box-sizing: border-box;
+        }
 
-<style>
+        body {
+            margin: 0;
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Arial,
+                sans-serif;
 
-* {
-    box-sizing: border-box;
-}
+            background: #f2f2f7;
+            color: #111;
+        }
 
-html,
-body {
-    margin: 0;
-    width: 100%;
-    height: 100%;
+        button,
+        input {
+            font: inherit;
+        }
 
-    font-family:
-        Arial,
-        Helvetica,
-        sans-serif;
+        /* LOGIN */
 
-    background: #080909;
-    color: white;
-}
+        #loginScreen {
+            position: fixed;
+            inset: 0;
 
-body {
-    overflow: hidden;
-}
+            display: flex;
+            align-items: center;
+            justify-content: center;
 
+            background: #f2f2f7;
+        }
 
-.app {
-    width: 100%;
-    height: 100vh;
+        .loginBox {
+            width: min(420px, 90%);
+            background: white;
 
-    display: flex;
+            padding: 35px;
+            border-radius: 24px;
 
-    background:
-        radial-gradient(
-            circle at 50% 0%,
-            #202525,
-            #080909 50%
-        );
-}
+            box-shadow:
+                0 10px 40px rgba(0,0,0,.12);
 
+            text-align: center;
+        }
 
-/* =========================
-   SIDEBAR
-========================= */
+        .logo {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
 
-.sidebar {
+        .subtitle {
+            color: #777;
+            margin-bottom: 30px;
+        }
 
-    width: 320px;
-    min-width: 320px;
+        .loginBox input {
+            width: 100%;
 
-    height: 100%;
+            padding: 15px;
 
-    border-right:
-        1px solid #292e2e;
+            border: 1px solid #ddd;
+            border-radius: 14px;
 
-    background:
-        rgba(13,15,15,.96);
+            outline: none;
 
-    display: flex;
-    flex-direction: column;
+            margin-bottom: 12px;
+        }
 
-}
+        .loginBox button {
+            width: 100%;
 
+            padding: 15px;
 
-.logo {
+            border: 0;
+            border-radius: 14px;
 
-    height: 85px;
+            background: #111;
+            color: white;
 
-    display: flex;
-    align-items: center;
+            cursor: pointer;
+        }
 
-    padding-left: 25px;
+        /* APP */
 
-    border-bottom:
-        1px solid #292e2e;
+        #app {
+            display: none;
 
-}
+            height: 100vh;
+            height: 100dvh;
+        }
 
+        /* USERS */
 
-.logo-number {
+        #usersPanel {
+            width: 300px;
 
-    font-size: 50px;
+            background: white;
 
-    font-weight: 900;
+            border-right: 1px solid #ddd;
 
-    letter-spacing: -7px;
+            display: flex;
+            flex-direction: column;
+        }
 
-}
+        .header {
+            padding: 20px;
 
+            border-bottom: 1px solid #eee;
+        }
 
-.logo-text {
+        .headerLogo {
+            font-size: 30px;
+            font-weight: 800;
+        }
 
-    margin-left: 15px;
+        .myName {
+            color: #777;
+            margin-top: 4px;
+            font-size: 14px;
+        }
 
-    color: #777;
+        .onlineTitle {
+            padding: 15px 20px 8px;
 
-    font-size: 11px;
+            font-size: 13px;
+            color: #888;
+        }
 
-    letter-spacing: 4px;
+        #usersList {
+            overflow-y: auto;
+            flex: 1;
+        }
 
-}
+        .user {
+            padding: 15px 20px;
 
+            cursor: pointer;
 
-/* =========================
-   USER
-========================= */
+            display: flex;
+            align-items: center;
 
-.user-box {
+            gap: 12px;
+        }
 
-    padding: 18px;
+        .user:hover {
+            background: #f5f5f5;
+        }
 
-    border-bottom:
-        1px solid #202424;
+        .user.active {
+            background: #e9e9ee;
+        }
 
-}
+        .avatar {
+            width: 42px;
+            height: 42px;
 
+            border-radius: 50%;
 
-.username {
+            background: #111;
+            color: white;
 
-    width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
 
-    padding: 11px;
+            font-weight: 700;
+        }
 
-    border-radius: 9px;
+        .userName {
+            font-weight: 600;
+        }
 
-    border:
-        1px solid #292e2e;
+        .onlineDot {
+            width: 8px;
+            height: 8px;
 
-    background: #101313;
+            border-radius: 50%;
 
-    color: white;
+            background: #30c45a;
 
-    outline: none;
+            margin-left: auto;
+        }
 
-}
+        /* CHAT */
 
+        #chat {
+            flex: 1;
 
-.connect {
+            display: flex;
+            flex-direction: column;
 
-    width: 100%;
+            min-width: 0;
+        }
 
-    margin-top: 8px;
+        #chatHeader {
+            height: 70px;
 
-    padding: 11px;
+            background: white;
 
-    border: 0;
+            border-bottom: 1px solid #ddd;
 
-    border-radius: 9px;
+            display: flex;
+            align-items: center;
 
-    background: white;
+            padding: 0 20px;
 
-    color: black;
+            font-weight: 700;
+        }
 
-    font-weight: bold;
+        #chatName {
+            font-size: 17px;
+        }
 
-    cursor: pointer;
+        #messages {
+            flex: 1;
 
-}
+            overflow-y: auto;
 
+            padding: 25px;
 
-/* =========================
-   ONLINE
-========================= */
+            display: flex;
+            flex-direction: column;
 
-.online-title {
+            gap: 8px;
+        }
 
-    padding:
-        18px 18px 8px;
+        .empty {
+            margin: auto;
 
-    color: #666;
+            text-align: center;
 
-    font-size: 10px;
+            color: #999;
+        }
 
-    letter-spacing: 2px;
+        .message {
+            max-width: 70%;
 
-}
+            padding: 10px 14px;
 
+            border-radius: 18px;
 
-.users {
+            line-height: 1.4;
 
-    flex: 1;
+            word-wrap: break-word;
+        }
 
-    overflow-y: auto;
+        .message.mine {
+            align-self: flex-end;
 
-}
+            background: #111;
+            color: white;
 
+            border-bottom-right-radius: 5px;
+        }
 
-.user {
+        .message.theirs {
+            align-self: flex-start;
 
-    padding:
-        11px 18px;
+            background: white;
 
-    color: #aaa;
+            border-bottom-left-radius: 5px;
+        }
 
-    font-size: 13px;
+        .time {
+            font-size: 10px;
 
-}
+            opacity: .55;
 
+            margin-top: 3px;
 
-.user::before {
+            text-align: right;
+        }
 
-    content: "●";
+        #inputArea {
+            background: white;
 
-    color: #62e879;
+            border-top: 1px solid #ddd;
 
-    margin-right: 8px;
+            padding: 12px;
 
-}
+            display: flex;
 
+            gap: 10px;
+        }
 
-/* =========================
-   CHAT
-========================= */
+        #messageInput {
+            flex: 1;
 
-.chat {
+            border: 1px solid #ddd;
 
-    flex: 1;
+            border-radius: 22px;
 
-    min-width: 0;
+            padding: 12px 16px;
 
-    display: flex;
+            outline: none;
+        }
 
-    flex-direction: column;
+        #sendButton {
+            width: 48px;
+            height: 48px;
 
-}
+            border: 0;
 
+            border-radius: 50%;
 
-/* HEADER */
+            background: #111;
+            color: white;
 
-.chat-header {
+            cursor: pointer;
 
-    height: 85px;
+            font-size: 20px;
+        }
 
-    border-bottom:
-        1px solid #292e2e;
+        #connectionStatus {
+            position: fixed;
 
-    display: flex;
+            top: 10px;
+            right: 15px;
 
-    align-items: center;
+            font-size: 12px;
 
-    padding: 0 25px;
+            z-index: 20;
+        }
 
-}
+        /* MOBILE */
 
+        @media (max-width: 700px) {
 
-.chat-avatar {
+            #usersPanel {
+                width: 100%;
+            }
 
-    width: 45px;
-    height: 45px;
+            #chat {
+                display: none;
+            }
 
-    border-radius: 50%;
+            #app.chatOpen #usersPanel {
+                display: none;
+            }
 
-    background: white;
+            #app.chatOpen #chat {
+                display: flex;
+            }
 
-    color: black;
+            #backButton {
+                display: block;
+            }
 
-    display: flex;
+            .message {
+                max-width: 82%;
+            }
+        }
 
-    justify-content: center;
-    align-items: center;
+        @media (min-width: 701px) {
 
-    font-weight: bold;
+            #backButton {
+                display: none;
+            }
 
-}
+        }
 
-
-.chat-title {
-
-    margin-left: 12px;
-
-}
-
-
-.chat-name {
-
-    font-size: 15px;
-
-    font-weight: bold;
-
-}
-
-
-.chat-status {
-
-    margin-top: 5px;
-
-    font-size: 11px;
-
-    color: #62e879;
-
-}
-
-
-/* =========================
-   MESSAGES
-========================= */
-
-.messages {
-
-    flex: 1;
-
-    overflow-y: auto;
-
-    padding:
-        25px 7%;
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 8px;
-
-}
-
-
-.message {
-
-    max-width: 65%;
-
-    align-self: flex-start;
-
-    background: #202525;
-
-    border-radius: 15px;
-
-    border-bottom-left-radius: 5px;
-
-    padding:
-        9px 13px;
-
-    font-size: 14px;
-
-    line-height: 1.4;
-
-}
-
-
-.message.mine {
-
-    align-self: flex-end;
-
-    background: white;
-
-    color: black;
-
-    border-bottom-left-radius: 15px;
-
-    border-bottom-right-radius: 5px;
-
-}
-
-
-.message-user {
-
-    color: #75ff85;
-
-    font-size: 10px;
-
-    font-weight: bold;
-
-    margin-bottom: 3px;
-
-}
-
-
-.message.mine .message-user {
-
-    color: #555;
-
-}
-
-
-.message-time {
-
-    display: block;
-
-    text-align: right;
-
-    font-size: 9px;
-
-    opacity: .45;
-
-    margin-top: 4px;
-
-}
-
-
-.system {
-
-    align-self: center;
-
-    color: #555;
-
-    font-size: 11px;
-
-    margin: 5px;
-
-}
-
-
-/* =========================
-   INPUT
-========================= */
-
-.input {
-
-    padding:
-        15px 25px 20px;
-
-    border-top:
-        1px solid #292e2e;
-
-}
-
-
-.input-row {
-
-    display: flex;
-
-    gap: 8px;
-
-}
-
-
-.message-input {
-
-    flex: 1;
-
-    height: 45px;
-
-    border:
-        1px solid #292e2e;
-
-    border-radius: 11px;
-
-    background: #151818;
-
-    color: white;
-
-    outline: none;
-
-    padding:
-        0 14px;
-
-    font-size: 14px;
-
-}
-
-
-.send {
-
-    width: 52px;
-
-    border: 0;
-
-    border-radius: 11px;
-
-    background: white;
-
-    color: black;
-
-    font-size: 18px;
-
-    font-weight: bold;
-
-    cursor: pointer;
-
-}
-
-
-.send:hover {
-
-    background: #ddd;
-
-}
-
-
-/* =========================
-   SCROLL
-========================= */
-
-::-webkit-scrollbar {
-
-    width: 5px;
-
-}
-
-
-::-webkit-scrollbar-thumb {
-
-    background: #292e2e;
-
-    border-radius: 10px;
-
-}
-
-
-/* =========================
-   MOBILE
-========================= */
-
-@media(max-width:700px) {
-
-    .sidebar {
-
-        display: none;
-
-    }
-
-    .chat {
-
-        width: 100%;
-
-    }
-
-    .messages {
-
-        padding:
-            15px;
-
-    }
-
-    .message {
-
-        max-width: 82%;
-
-    }
-
-    .input {
-
-        padding:
-            10px;
-
-    }
-
-}
-
-</style>
-
+    </style>
 </head>
-
 
 <body>
 
+<!-- LOGIN -->
 
-<div class="app">
+<div id="loginScreen">
+
+    <div class="loginBox">
+
+        <div class="logo">17</div>
+
+        <div class="subtitle">
+            17 Messenger
+        </div>
+
+        <input
+            id="nameInput"
+            type="text"
+            maxlength="30"
+            placeholder="Введите ваше имя"
+            autocomplete="off"
+        >
+
+        <button id="loginButton">
+            Войти
+        </button>
+
+    </div>
+
+</div>
 
 
-    <!-- SIDEBAR -->
+<!-- APP -->
 
-    <aside class="sidebar">
+<div id="app">
 
+    <div id="usersPanel">
 
-        <div class="logo">
+        <div class="header">
 
-            <div class="logo-number">
+            <div class="headerLogo">
                 17
             </div>
 
-            <div class="logo-text">
-                MESSENGER
+            <div
+                class="myName"
+                id="myName"
+            ></div>
+
+        </div>
+
+        <div class="onlineTitle">
+            ОНЛАЙН
+        </div>
+
+        <div id="usersList"></div>
+
+    </div>
+
+
+    <div id="chat">
+
+        <div id="chatHeader">
+
+            <button
+                id="backButton"
+                style="
+                    border:0;
+                    background:none;
+                    font-size:22px;
+                    margin-right:10px;
+                    cursor:pointer;
+                "
+            >
+                ‹
+            </button>
+
+            <div id="chatName">
+                Выберите пользователя
             </div>
 
         </div>
 
 
-        <div class="user-box">
+        <div id="messages">
+
+            <div class="empty">
+                Выберите пользователя,
+                чтобы начать чат
+            </div>
+
+        </div>
+
+
+        <div id="inputArea">
 
             <input
-                id="username"
-                class="username"
-                placeholder="Твоё имя"
-                maxlength="30"
+                id="messageInput"
+                type="text"
+                placeholder="Сообщение..."
+                autocomplete="off"
             >
 
-            <button
-                id="connect"
-                class="connect"
-            >
-                ПОДКЛЮЧИТЬСЯ
+            <button id="sendButton">
+                ➤
             </button>
 
         </div>
 
+    </div>
 
-        <div class="online-title">
-            ОНЛАЙН
-        </div>
-
-
-        <div
-            id="users"
-            class="users">
-        </div>
+</div>
 
 
-    </aside>
-
-
-    <!-- CHAT -->
-
-    <main class="chat">
-
-
-        <header class="chat-header">
-
-
-            <div class="chat-avatar">
-                17
-            </div>
-
-
-            <div class="chat-title">
-
-                <div class="chat-name">
-                    17 Messenger
-                </div>
-
-                <div
-                    id="status"
-                    class="chat-status">
-                    не подключён
-                </div>
-
-            </div>
-
-
-        </header>
-
-
-        <div
-            id="messages"
-            class="messages">
-
-            <div class="system">
-                Добро пожаловать в 17 Messenger
-            </div>
-
-        </div>
-
-
-        <div class="input">
-
-            <div class="input-row">
-
-                <input
-                    id="message"
-                    class="message-input"
-                    placeholder="Написать сообщение..."
-                    autocomplete="off"
-                >
-
-                <button
-                    id="send"
-                    class="send">
-                    ➤
-                </button>
-
-            </div>
-
-        </div>
-
-
-    </main>
-
-
+<div id="connectionStatus">
+    ● подключение...
 </div>
 
 
 <script>
 
-/* =========================
-   ELEMENTS
-========================= */
+let socket = null;
 
-const usernameInput =
+let myName = "";
+
+let selectedUser = "";
+
+let onlineUsers = [];
+
+const conversations = {};
+
+const loginScreen =
     document.getElementById(
-        "username"
+        "loginScreen"
     );
 
-const connectButton =
+const app =
     document.getElementById(
-        "connect"
+        "app"
     );
 
-const messageInput =
+const nameInput =
     document.getElementById(
-        "message"
+        "nameInput"
     );
 
-const sendButton =
+const loginButton =
     document.getElementById(
-        "send"
+        "loginButton"
+    );
+
+const usersList =
+    document.getElementById(
+        "usersList"
     );
 
 const messages =
@@ -712,69 +539,82 @@ const messages =
         "messages"
     );
 
-const users =
+const messageInput =
     document.getElementById(
-        "users"
+        "messageInput"
     );
 
-const status =
+const sendButton =
     document.getElementById(
-        "status"
+        "sendButton"
+    );
+
+const chatName =
+    document.getElementById(
+        "chatName"
+    );
+
+const connectionStatus =
+    document.getElementById(
+        "connectionStatus"
+    );
+
+const myNameElement =
+    document.getElementById(
+        "myName"
     );
 
 
-/* =========================
-   SOCKET
-========================= */
+/* LOGIN */
 
-let socket = null;
+loginButton.onclick = login;
 
-let myName = "";
+nameInput.addEventListener(
+    "keydown",
+    function(event) {
 
-
-/* =========================
-   CONNECT
-========================= */
-
-function connect() {
-
-    myName =
-        usernameInput.value.trim();
-
-
-    if (!myName) {
-
-        alert(
-            "Введите своё имя"
-        );
-
-        return;
+        if (event.key === "Enter") {
+            login();
+        }
 
     }
+);
 
+
+function login() {
+
+    const name =
+        nameInput.value
+        .trim()
+        .substring(0, 30);
+
+    if (!name) {
+        return;
+    }
+
+    myName = name;
+
+    connect();
+
+}
+
+
+/* CONNECT */
+
+function connect() {
 
     if (
         socket &&
         socket.readyState ===
         WebSocket.OPEN
     ) {
-
         return;
-
     }
-
-
-    /*
-       Если сайт открыт через
-       localhost, подключаемся
-       к этому же компьютеру.
-    */
 
     const protocol =
         location.protocol === "https:"
             ? "wss:"
             : "ws:";
-
 
     socket =
         new WebSocket(
@@ -784,31 +624,44 @@ function connect() {
         );
 
 
-    socket.onopen =
-        function() {
+    socket.onopen = function() {
 
-            status.textContent =
-                "● онлайн";
+        connectionStatus.textContent =
+            "● онлайн";
 
-            status.style.color =
-                "#62e879";
+        connectionStatus.style.color =
+            "#30c45a";
 
+        socket.send(
+            JSON.stringify({
+                type: "login",
+                username: myName
+            })
+        );
 
-            socket.send(
-                JSON.stringify({
-
-                    type: "login",
-
-                    username: myName
-
-                })
-            );
+    };
 
 
-            connectButton.textContent =
-                "ПОДКЛЮЧЕНО";
+    socket.onclose = function() {
 
-        };
+        connectionStatus.textContent =
+            "● отключён";
+
+        connectionStatus.style.color =
+            "#e53935";
+
+    };
+
+
+    socket.onerror = function() {
+
+        connectionStatus.textContent =
+            "● ошибка соединения";
+
+        connectionStatus.style.color =
+            "#e53935";
+
+    };
 
 
     socket.onmessage =
@@ -830,31 +683,23 @@ function connect() {
             }
 
 
-            /* MESSAGE */
+            /* LOGIN */
 
             if (
                 data.type ===
-                "message"
+                "login_success"
             ) {
 
-                addMessage(
-                    data
-                );
+                loginScreen.style.display =
+                    "none";
 
-            }
+                app.style.display =
+                    "flex";
 
+                myNameElement.textContent =
+                    myName;
 
-            /* SYSTEM */
-
-            if (
-                data.type ===
-                "system"
-            ) {
-
-                addSystemMessage(
-                    data.text
-                );
-
+                return;
             }
 
 
@@ -865,56 +710,335 @@ function connect() {
                 "users"
             ) {
 
-                renderUsers(
-                    data.users
-                );
+                onlineUsers =
+                    data.users || [];
 
+                renderUsers();
+
+                return;
             }
 
-        };
+
+            /* PRIVATE MESSAGE */
+
+            if (
+                data.type ===
+                "private_message"
+            ) {
+
+                const otherUser =
+                    data.from === myName
+                        ? data.to
+                        : data.from;
 
 
-    socket.onclose =
-        function() {
+                if (
+                    !conversations[
+                        otherUser
+                    ]
+                ) {
 
-            status.textContent =
-                "● не подключён";
+                    conversations[
+                        otherUser
+                    ] = [];
 
-            status.style.color =
-                "#777";
-
-            connectButton.textContent =
-                "ПОДКЛЮЧИТЬСЯ";
-
-        };
+                }
 
 
-    socket.onerror =
-        function() {
+                conversations[
+                    otherUser
+                ].push(data);
 
-            status.textContent =
-                "● ошибка подключения";
 
-            status.style.color =
-                "#ff5555";
+                if (
+                    selectedUser ===
+                    otherUser
+                ) {
+
+                    renderMessages();
+
+                }
+
+                return;
+            }
+
+
+            /* ERROR */
+
+            if (
+                data.type ===
+                "error"
+            ) {
+
+                alert(data.text);
+
+            }
 
         };
 
 }
 
 
-/* =========================
-   SEND
-========================= */
+/* USERS */
+
+function renderUsers() {
+
+    usersList.innerHTML = "";
+
+    const users =
+        onlineUsers.filter(
+            user =>
+                user !== myName
+        );
+
+
+    if (users.length === 0) {
+
+        usersList.innerHTML = `
+            <div
+                style="
+                    padding:20px;
+                    color:#999;
+                    text-align:center;
+                "
+            >
+                Пока никого нет
+            </div>
+        `;
+
+        return;
+    }
+
+
+    users.forEach(
+        function(username) {
+
+            const item =
+                document.createElement(
+                    "div"
+                );
+
+            item.className =
+                "user";
+
+
+            if (
+                username ===
+                selectedUser
+            ) {
+
+                item.classList.add(
+                    "active"
+                );
+
+            }
+
+
+            const avatar =
+                document.createElement(
+                    "div"
+                );
+
+            avatar.className =
+                "avatar";
+
+            avatar.textContent =
+                username
+                .charAt(0)
+                .toUpperCase();
+
+
+            const name =
+                document.createElement(
+                    "div"
+                );
+
+            name.className =
+                "userName";
+
+            name.textContent =
+                username;
+
+
+            const dot =
+                document.createElement(
+                    "div"
+                );
+
+            dot.className =
+                "onlineDot";
+
+
+            item.appendChild(
+                avatar
+            );
+
+            item.appendChild(
+                name
+            );
+
+            item.appendChild(
+                dot
+            );
+
+
+            item.onclick =
+                function() {
+
+                    openChat(username);
+
+                };
+
+
+            usersList.appendChild(
+                item
+            );
+
+        }
+    );
+
+}
+
+
+/* OPEN CHAT */
+
+function openChat(username) {
+
+    selectedUser =
+        username;
+
+    if (
+        !conversations[
+            username
+        ]
+    ) {
+
+        conversations[
+            username
+        ] = [];
+
+    }
+
+
+    chatName.textContent =
+        username;
+
+    app.classList.add(
+        "chatOpen"
+    );
+
+    renderUsers();
+
+    renderMessages();
+
+    messageInput.focus();
+
+}
+
+
+/* MESSAGES */
+
+function renderMessages() {
+
+    messages.innerHTML = "";
+
+    const list =
+        conversations[
+            selectedUser
+        ] || [];
+
+
+    if (list.length === 0) {
+
+        messages.innerHTML = `
+            <div class="empty">
+                Нет сообщений.<br>
+                Напишите первым.
+            </div>
+        `;
+
+        return;
+    }
+
+
+    list.forEach(
+        function(message) {
+
+            const bubble =
+                document.createElement(
+                    "div"
+                );
+
+
+            bubble.className =
+                "message " +
+                (
+                    message.from === myName
+                        ? "mine"
+                        : "theirs"
+                );
+
+
+            const text =
+                document.createElement(
+                    "div"
+                );
+
+            text.textContent =
+                message.text;
+
+
+            const time =
+                document.createElement(
+                    "div"
+                );
+
+            time.className =
+                "time";
+
+            time.textContent =
+                message.time;
+
+
+            bubble.appendChild(
+                text
+            );
+
+            bubble.appendChild(
+                time
+            );
+
+
+            messages.appendChild(
+                bubble
+            );
+
+        }
+    );
+
+
+    messages.scrollTop =
+        messages.scrollHeight;
+
+}
+
+
+/* SEND */
 
 function sendMessage() {
 
     const text =
-        messageInput.value.trim();
+        messageInput.value
+        .trim();
 
 
-    if (!text) {
+    if (
+        !text ||
+        !selectedUser
+    ) {
+
         return;
+
     }
 
 
@@ -925,7 +1049,7 @@ function sendMessage() {
     ) {
 
         alert(
-            "Сначала подключитесь к серверу"
+            "Нет подключения к серверу"
         );
 
         return;
@@ -936,9 +1060,14 @@ function sendMessage() {
     socket.send(
         JSON.stringify({
 
-            type: "message",
+            type:
+                "private_message",
 
-            text
+            to:
+                selectedUser,
+
+            text:
+                text
 
         })
     );
@@ -951,180 +1080,8 @@ function sendMessage() {
 }
 
 
-/* =========================
-   ADD MESSAGE
-========================= */
-
-function addMessage(data) {
-
-    const element =
-        document.createElement(
-            "div"
-        );
-
-
-    element.className =
-        "message";
-
-
-    if (
-        data.username === myName
-    ) {
-
-        element.classList.add(
-            "mine"
-        );
-
-    }
-
-
-    const username =
-        document.createElement(
-            "div"
-        );
-
-
-    username.className =
-        "message-user";
-
-
-    username.textContent =
-        data.username;
-
-
-    const text =
-        document.createElement(
-            "div"
-        );
-
-
-    text.textContent =
-        data.text;
-
-
-    const time =
-        document.createElement(
-            "span"
-        );
-
-
-    time.className =
-        "message-time";
-
-
-    time.textContent =
-        data.time;
-
-
-    element.appendChild(
-        username
-    );
-
-    element.appendChild(
-        text
-    );
-
-    element.appendChild(
-        time
-    );
-
-
-    messages.appendChild(
-        element
-    );
-
-
-    messages.scrollTop =
-        messages.scrollHeight;
-
-}
-
-
-/* =========================
-   SYSTEM MESSAGE
-========================= */
-
-function addSystemMessage(
-    text
-) {
-
-    const element =
-        document.createElement(
-            "div"
-        );
-
-
-    element.className =
-        "system";
-
-
-    element.textContent =
-        text;
-
-
-    messages.appendChild(
-        element
-    );
-
-
-    messages.scrollTop =
-        messages.scrollHeight;
-
-}
-
-
-/* =========================
-   USERS
-========================= */
-
-function renderUsers(
-    list
-) {
-
-    users.innerHTML = "";
-
-
-    list.forEach(
-        function(name) {
-
-            const element =
-                document.createElement(
-                    "div"
-                );
-
-
-            element.className =
-                "user";
-
-
-            element.textContent =
-                name;
-
-
-            users.appendChild(
-                element
-            );
-
-        }
-    );
-
-}
-
-
-/* =========================
-   EVENTS
-========================= */
-
-connectButton.addEventListener(
-    "click",
-    connect
-);
-
-
-sendButton.addEventListener(
-    "click",
-    sendMessage
-);
+sendButton.onclick =
+    sendMessage;
 
 
 messageInput.addEventListener(
@@ -1132,11 +1089,8 @@ messageInput.addEventListener(
     function(event) {
 
         if (
-            event.key ===
-            "Enter"
+            event.key === "Enter"
         ) {
-
-            event.preventDefault();
 
             sendMessage();
 
@@ -1146,35 +1100,25 @@ messageInput.addEventListener(
 );
 
 
-/* =========================
-   AUTO NAME
-========================= */
+/* BACK ON MOBILE */
 
-const savedName =
-    localStorage.getItem(
-        "17Username"
-    );
-
-
-if (savedName) {
-
-    usernameInput.value =
-        savedName;
-
-}
-
-
-usernameInput.addEventListener(
-    "change",
+document
+    .getElementById(
+        "backButton"
+    )
+    .onclick =
     function() {
 
-        localStorage.setItem(
-            "17Username",
-            usernameInput.value
+        app.classList.remove(
+            "chatOpen"
         );
 
-    }
-);
+    };
+
+
+/* AUTO LOGIN */
+
+nameInput.focus();
 
 </script>
 
